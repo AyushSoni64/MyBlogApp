@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "nodemon": "nodemon ./dist/index.js",
+    "start": "tsc-watch --onSuccess \"npm run nodemon\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "tsc-watch": "^6.2.0",
+    "typescript": "^5.4.5"
+  }
+}

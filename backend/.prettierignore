@@ -1,0 +1,44 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore build output directories
+dist/
+build/
+
+# Ignore TypeScript configuration files
+tsconfig.json
+
+# Ignore ESLint configuration files
+.eslintrc.js
+.eslintrc.json
+
+# Ignore environment variable files
+.env
+.env.*  # For environment-specific .env files
+
+# Ignore static assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+
+# Ignore documentation
+docs/
+
+# Ignore specific files (e.g., README.md, CHANGELOG.md if you don't want them formatted)
+README.md
+CHANGELOG.md
+
+# Ignore Prettier configuration files
+.prettierrc
+.prettierrc.json
+.prettierrc.yml
+.prettierrc.toml
+.prettierrc.js
+.prettier.config.js
+
+# Ignore other configuration files
+package-lock.json
+yarn.lock
