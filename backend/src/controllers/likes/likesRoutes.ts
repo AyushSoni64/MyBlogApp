@@ -1,9 +1,9 @@
-// import { Router } from 'express';
-// import { likeBlog, getUserLikedBlogs } from '../controllers/likeController';
+import { Router } from "express";
+import likeController from "./likeController";
 
-// const router = Router();
+const router = Router();
 
-// router.post('/blogs/:blogId/like', likeBlog);
-// router.get('/users/:userId/likes', getUserLikedBlogs);
+router.post("/blogs/:blogId/like", likeController.likeBlog);
+router.get("/users/:userId/likes", likeController.getUserLikedBlogs);
 
-// export default router;
+export default router;

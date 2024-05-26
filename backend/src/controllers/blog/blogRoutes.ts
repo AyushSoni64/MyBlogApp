@@ -1,10 +1,10 @@
-// import { Router } from 'express';
-// import { createBlog, getAllBlogs, getBlogById } from './blogController';
+import { Router } from "express";
+import blogController from "./blogController";
 
-// const router = Router();
+const router = Router();
 
-// router.post('/blogs', createBlog);
-// router.get('/blogs', getAllBlogs);
-// router.get('/blog/:blogId', getBlogById);
+router.post("/blogs", blogController.createBlog);
+router.get("/blogs", blogController.getAllBlogs);
+router.get("/blog/:blogId", blogController.getBlogById);
 
-// export default router;
+export default router;

@@ -1,17 +1,11 @@
-import { config } from "dotenv";
 import connection from "./config/connection.js";
-import express from "express";
-import { configuration } from "./config/configuration.js";
+import { configurations } from "./config/configurations.js";
+import { app } from "./app.js";
 
-// const express = require("express");
-config();
-
-const app = express();
-
-connection()
+connection(configurations.mongoUrl)
   .then(() => {
-    app.listen(configuration.port || 4000, () => {
-      console.log("Server is running on port ", configuration.port);
+    app.listen(configurations.port || 4000, () => {
+      console.log("Server is running on port ", configurations.port);
     });
   })
   .catch((error) => {

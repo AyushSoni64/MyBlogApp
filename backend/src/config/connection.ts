@@ -1,13 +1,14 @@
-import mongoose, { mongo } from "mongoose";
-import { DB_NAME } from "../constants.js";
-import { configuration } from "./configuration.js";
+import mongoose from "mongoose";
+import { DB_NAME } from "../libs/constants.js";
+import seedData from "../libs/seedData.js";
 
-const connection = async () => {
+const connection = async (mongoUrl: string) => {
   try {
     const connInstance = await mongoose.connect(
-      `${configuration.mongoUrl}/${DB_NAME}`
+      `${mongoUrl}/${DB_NAME}`
     );
     if (connInstance) {
+      await seedData();
       console.log(
         `MongoDb Connected Successfully!!! DB HOST: ${connInstance.connection.host}`
       );

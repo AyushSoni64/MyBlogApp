@@ -1,14 +1,7 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema } from "mongoose";
+import { IUser } from "./IUser";
 
-interface IUser extends Document {
-  firstname: string;
-  lastname: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-}
-
-const userSchema = new Schema<IUser>(
+export const userSchema = new Schema<IUser>(
   {
     firstname: {
       type: String,
@@ -27,12 +20,11 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
-
-const User = model<IUser>("User", userSchema);
-
-export default User;

@@ -1,13 +1,7 @@
-import { Document, Types, model, Schema } from "mongoose";
+import { Schema } from "mongoose";
+import { IBlog } from "./IBlog";
 
-interface IBlog extends Document {
-  title: string;
-  picture?: string;
-  description: string;
-  createdBy: Types.ObjectId;
-}
-
-const blogSchema = new Schema<IBlog>(
+export const blogSchema = new Schema<IBlog>(
   {
     title: {
       type: String,
@@ -25,12 +19,13 @@ const blogSchema = new Schema<IBlog>(
       ref: "User",
       required: true,
     },
+    deletedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
-
-const Blog = model<IBlog>("Blog", blogSchema);
-
-export default Blog;

@@ -1,9 +1,41 @@
-// import { Router } from 'express';
-// import { register, login } from '../controllers/userController';
+import { Router } from "express";
+import user from "./userController";
+import userValidation from "./validation";
+import validationHandler from "../../utils/ValidateHandler";
+import authMiddleware from "../../libs/authMiddleware";
 
-// const router = Router();
+const userRouter: Router = Router();
 
-// router.post('/register', register);
-// router.post('/login', login);
+userRouter.get("/profile", authMiddleware, user.profile);
 
-// export default router;
+userRouter
+  .post("/login", validationHandler(userValidation.login), user.login)
+
+  .get(
+    "/allUsersData",
+    authMiddleware,
+    validationHandler(userValidation.get),
+    user.getAllUsersData
+  )
+
+  .post(
+    "/register",
+    validationHandler(userValidation.create),
+    user.registerUser
+  )
+
+  .put(
+    "/user/:originalId",
+    authMiddleware,
+    validationHandler(userValidation.update),
+    user.updateUser
+  )
+
+  .delete(
+    "/user/:originalId",
+    authMiddleware,
+    validationHandler(userValidation.delete),
+    user.deleteUser
+  );
+
+export default userRouter;
