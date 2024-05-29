@@ -127,8 +127,10 @@ class UserController {
       if (userExists) {
         const match = await bcrypt.compare(password, userExists.password);
         if (match) {
+          const { password, likedBlogs, role, ...userWithoutSensitiveInfo } =
+            userExists.toObject();
           const token = jwt.sign(
-            { data: userExists },
+            { data: userWithoutSensitiveInfo },
             configurations.jwt_secret
           );
           return response

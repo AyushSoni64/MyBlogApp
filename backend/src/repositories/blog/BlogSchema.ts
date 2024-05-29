@@ -9,7 +9,15 @@ export const blogSchema = new Schema<IBlog>(
     },
     picture: {
       type: String,
+      required: true,
     },
+    likedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
     description: {
       type: String,
       required: true,
@@ -19,13 +27,14 @@ export const blogSchema = new Schema<IBlog>(
       ref: "User",
       required: true,
     },
-    deletedBy: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+
+blogSchema.virtual("likes").get(function () {
+  return this.likedBy.length;
+});

@@ -1,10 +1,55 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import blogController from "./blogController";
+import authMiddleware from "../../libs/authMiddleware";
+import blogValidation from "./validation";
+import validationHandler from "../../utils/ValidateHandler";
+import { upload } from "../../libs/multer";
 
-const router = Router();
+const blogRouter = Router();
 
-router.post("/blogs", blogController.createBlog);
-router.get("/blogs", blogController.getAllBlogs);
-router.get("/blog/:blogId", blogController.getBlogById);
 
-export default router;
+blogRouter.get("/blogs", blogController.getAllBlogs);
+
+blogRouter.post(
+  "/blogs",
+  authMiddleware,
+  upload.single("picture"),
+  validationHandler(blogValidation.addBlog),
+  blogController.addBlog
+);
+
+blogRouter.put(
+  "/blogs/:blogId",
+  authMiddleware,
+  validationHandler(blogValidation.editBlog),
+  blogController.editBlog
+);
+
+blogRouter.get(
+  "/blogs/:blogId",
+  validationHandler(blogValidation.findBlogById),
+  blogController.findBlogById
+);
+
+blogRouter.delete(
+  "/blogs/:blogId",
+  authMiddleware,
+  validationHandler(blogValidation.deleteBlog),
+  blogController.deleteBlogById
+);
+
+blogRouter.put(
+  "/blogs/:blogId/like",
+  authMiddleware,
+  validationHandler(blogValidation.toggleLike),
+  blogController.toggleLike
+);
+
+blogRouter.get(
+  "/user/:userId/blogs",
+  authMiddleware,
+  validationHandler(blogValidation.getBlogsByUserId),
+  blogController.getBlogsByUserId
+);
+
+export default blogRouter;

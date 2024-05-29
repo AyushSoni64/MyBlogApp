@@ -9,6 +9,6 @@ export const configurations: IConfig = Object.freeze({
   mongoUrl: process.env.MONGO_DB_URI,
   saltRounds: Number(process.env.SALT_ROUNDS),
   cloudinary_cloud: process.env.CLOUDINARY_CLOUD_NAME,
-  cloudinary_secret: process.env.CLOUDINARY_API_KEY,
-  cloudinary_api: process.env.CLOUDINARY_API_SECRET,
+  cloudinary_api: process.env.CLOUDINARY_API_KEY,
+  cloudinary_secret: process.env.CLOUDINARY_API_SECRET,
 });

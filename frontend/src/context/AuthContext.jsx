@@ -1,0 +1,56 @@
+import { createContext, useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [authMessage, setAuthMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (savedToken && savedUser) {
+      setIsAuthenticated(true);
+      setToken(savedToken);
+      setUser(savedUser);
+    }
+  }, [isAuthenticated]);
+
+  const login = (token, user) => {
+    setToken(token);
+    setUser(user);
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    navigate("/");
+  };
+
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
+  const value = {
+    user,
+    token,
+    authMessage,
+    setAuthMessage,
+    login,
+    logout,
+    isAuthenticated,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

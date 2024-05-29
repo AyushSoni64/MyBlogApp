@@ -23,6 +23,13 @@ export const userSchema = new Schema<IUser>(
     role: {
       type: String,
     },
+    likedBlogs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Blog",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
