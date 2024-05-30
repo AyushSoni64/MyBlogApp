@@ -12,6 +12,7 @@ class BlogController {
         new ApiResponse(200, blogs, "Fetched all blogs successfully")
       );
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller getAllBlogs =>", error);
       next(new ApiError(500, error.message));
     }
   }
@@ -29,11 +30,11 @@ class BlogController {
         createdBy,
         ...blogData,
       });
-
       response.json(
         new ApiResponse(201, { blogId }, "Blog added successfully")
       );
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller addBlog =>", error);
       next(new ApiError(400, error.message));
     }
   }
@@ -45,6 +46,7 @@ class BlogController {
       const blog = await BlogRepository.editBlog(blogId, title, description);
       response.json(new ApiResponse(200, blog, "Blog updated successfully"));
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller editBlog =>", error);
       next(new ApiError(400, error.message));
     }
   }
@@ -55,6 +57,7 @@ class BlogController {
       const blog = await BlogRepository.findBlogById(blogId);
       response.json(new ApiResponse(200, blog, "Fetched blog successfully"));
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller findBlogById =>", error);
       next(new ApiError(404, error.message));
     }
   }
@@ -71,6 +74,7 @@ class BlogController {
         new ApiResponse(200, blogs, "Fetched user's blogs successfully")
       );
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller getBlogsByUserId =>", error);
       next(new ApiError(400, error.message));
     }
   }
@@ -85,17 +89,19 @@ class BlogController {
       const blog = await BlogRepository.deleteBlogById(blogId);
       response.json(new ApiResponse(200, blog, "Blog deleted successfully"));
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller deleteBlogById =>", error);
       next(new ApiError(400, error.message));
     }
   }
 
-  async toggleLike(request: Request, response: Response, next: NextFunction) {
+  async toggleLike(request: any, response: Response, next: NextFunction) {
     try {
       const { blogId } = request.params;
-      const userId = request.body.user?.data?._id;
+      const userId = request?.user?.data?._id;
       const blog = await BlogRepository.toggleLike(blogId, userId);
-      response.json(new ApiResponse(200, blog, "Toggled like successfully"));
+      response.json(new ApiResponse(200, blog, "Liked successfully"));
     } catch (error) {
+      console.log("CATCH BLOCK : blogs controller toggleLike =>", error);
       next(new ApiError(400, error.message));
     }
   }

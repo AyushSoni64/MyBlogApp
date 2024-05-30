@@ -21,7 +21,7 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-600 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10">
       <div className="text-white text-xl font-bold">
-        <Link to="/">MyBlogsApp</Link>
+        <Link to="/blogs">MyBlogsApp</Link>
       </div>
       <div className="flex items-center space-x-4">
         <button
@@ -38,7 +38,9 @@ const Navbar = () => {
         </button>
         {!isAuthenticated ? (
           <>
-            {location.pathname === "/signup" && (
+            {(location.pathname === "/signup" ||
+              location.pathname === "/" ||
+              location.pathname.includes("/blogs")) && (
               <Link
                 to="/login"
                 className="bg-white text-blue-600 px-4 py-2 rounded"
@@ -46,7 +48,7 @@ const Navbar = () => {
                 Login
               </Link>
             )}
-            {location.pathname === "/" && (
+            {location.pathname === "/login" && (
               <Link
                 to="/signup"
                 className="bg-white text-blue-600 px-4 py-2 rounded"

@@ -121,7 +121,7 @@ class UserController {
   login = async (request: Request, response: Response, next: NextFunction) => {
     try {
       const { email, password } = request.body;
-      console.log("valid token request for user", request.body);
+      // console.log("valid token request for user", request.body);
       const userExists = await userRepository.findOneUser({ email });
 
       if (userExists) {
@@ -151,6 +151,32 @@ class UserController {
     } catch (error) {
       console.log("CATCH BLOCK : user controller login =>", error);
       return next(new ApiError(500, "Internal Server Error", [error.message]));
+    }
+  };
+
+  getLikedBlogs = async (
+    request: any,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const token = request.header("Authorization");
+      const { jwt_secret } = configurations;
+      const decodedToken: any = jwt.verify(token, jwt_secret);
+      const user = await userRepository.getUserLikedBlogs(decodedToken.data._id);
+      if (!user) {
+        throw new ApiError(404, "User not found");
+      }
+      response.json(
+        new ApiResponse(
+          200,
+          user.likedBlogs,
+          "Fetched liked blogs successfully"
+        )
+      );
+    } catch (error) {
+      console.log("CATCH BLOCK : user controller getLikedBlogs =>", error);
+      next(new ApiError(400, error.message));
     }
   };
 }

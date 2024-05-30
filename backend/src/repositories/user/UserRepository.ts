@@ -47,6 +47,22 @@ class UserRepository {
     }
   }
 
+  getUserLikedBlogs = async (userId) => {
+    try {
+      const user = await this.userModel.findById(userId).populate({
+        path: "likedBlogs",
+        populate: {
+          path: "createdBy",
+          select: "firstname lastname email",
+        },
+      });
+      return user;
+    } catch (error) {
+      console.error("UserRepository getUserLikedBlogs =>", error);
+      throw error;
+    }
+  };
+
   public async getUserById(userId: string) {
     try {
       return await this.userModel.findById(userId);

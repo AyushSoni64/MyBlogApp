@@ -36,6 +36,11 @@ userRouter
     authMiddleware,
     validationHandler(userValidation.delete),
     user.deleteUser
-  );
+  )
 
+  .get(
+    "/user/:userId/liked",
+    authMiddleware,
+    user.getLikedBlogs
+  );
 export default userRouter;

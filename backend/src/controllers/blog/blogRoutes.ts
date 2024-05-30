@@ -34,11 +34,10 @@ blogRouter.get(
 blogRouter.delete(
   "/blogs/:blogId",
   authMiddleware,
-  validationHandler(blogValidation.deleteBlog),
   blogController.deleteBlogById
 );
 
-blogRouter.put(
+blogRouter.patch(
   "/blogs/:blogId/like",
   authMiddleware,
   validationHandler(blogValidation.toggleLike),
@@ -51,5 +50,7 @@ blogRouter.get(
   validationHandler(blogValidation.getBlogsByUserId),
   blogController.getBlogsByUserId
 );
+
+
 
 export default blogRouter;

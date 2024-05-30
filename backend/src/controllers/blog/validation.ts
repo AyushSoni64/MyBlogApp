@@ -48,14 +48,6 @@ const blogValidation = Object.freeze({
       },
     },
   },
-  deleteBlog: {
-    blogId: {
-      in: ["params"],
-      isMongoId: {
-        errorMessage: "Invalid blog ID.",
-      },
-    },
-  },
   toggleLike: {
     blogId: {
       in: ["params"],
