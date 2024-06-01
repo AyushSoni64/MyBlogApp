@@ -2,6 +2,7 @@ import * as jwt from "jsonwebtoken";
 import { configurations } from "../config/configurations";
 import { Response, NextFunction } from "express";
 import { userRepository } from "../repositories/user/UserRepository";
+import { ApiError } from "../utils/ApiError";
 
 export default async (request: any, response: Response, next: NextFunction) => {
   try {
@@ -30,6 +31,6 @@ export default async (request: any, response: Response, next: NextFunction) => {
     }
   } catch (error) {
     console.log("CATCH BLOCK : AuthMiddleware =>", error);
-    return next(error);
+    return next(new ApiError(401, error.message));
   }
 };

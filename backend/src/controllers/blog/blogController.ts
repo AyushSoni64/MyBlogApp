@@ -7,7 +7,8 @@ import { uploadOnCloudinary } from "../../utils/Cloudinary";
 class BlogController {
   async getAllBlogs(request: any, response: Response, next: NextFunction) {
     try {
-      const blogs = await BlogRepository.getBlogs();
+      const { page, limit } = request.query;
+      const blogs = await BlogRepository.getBlogs(Number(page), Number(limit));
       response.json(
         new ApiResponse(200, blogs, "Fetched all blogs successfully")
       );
@@ -39,11 +40,22 @@ class BlogController {
     }
   }
 
-  async editBlog(request: Request, response: Response, next: NextFunction) {
+  async editBlog(request: any, response: Response, next: NextFunction) {
     try {
       const { blogId } = request.params;
       const { title, description } = request.body;
-      const blog = await BlogRepository.editBlog(blogId, title, description);
+      // const picturePath = request.file?.path;
+      // const picture = await uploadOnCloudinary(picturePath);
+      // if (!picture) next(new ApiError(400, "Error in image upload"));
+      let picture;
+      if (request.file) {
+        const picturePath = request.file.path;
+        picture = await uploadOnCloudinary(picturePath);
+        if (!picture) {
+          return next(new ApiError(400, "Error in image upload"));
+        }
+      }
+      const blog = await BlogRepository.editBlog(blogId, title, description, picture.url);
       response.json(new ApiResponse(200, blog, "Blog updated successfully"));
     } catch (error) {
       console.log("CATCH BLOCK : blogs controller editBlog =>", error);

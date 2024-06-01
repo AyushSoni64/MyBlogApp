@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/");
+    navigate("/blogs");
   };
 
   const value = {
@@ -57,6 +57,15 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+let globalLogout = () => {};
+
+export const setGlobalLogout = (logoutFunction) => {
+  globalLogout = logoutFunction;
+};
+
+export const getGlobalLogout = () => {
+  return globalLogout;
+};
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,

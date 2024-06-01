@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import BlogCard from "../feed/BlogCard";
 import axiosInstance from "../../utils/axoisInstance";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "../genericComponent/Modal";
 import { useAuth } from "../../context/AuthContext";
@@ -58,26 +58,26 @@ const MyCreatedPost = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-4">
+       <h3 className="text-center text-5xl mt-5">My Created Blogs</h3>
       {blogs.length === 0 ? (
         <div className="text-center text-gray-600">
           You don&apos;t have any created blogs
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="max-w-6xl mx-auto">
           {blogs?.map((blog) => (
-            <div key={blog._id} className="relative">
-              <Link to={`/blogs/${blog._id}`} key={blog._id}>
-                <BlogCard
-                  picture={blog.picture}
-                  title={blog.title}
-                  description={blog.description}
-                  createdBy={blog.createdBy.firstname || "Unknown"}
-                  createdAt={blog.createdAt}
-                  likes={blog.likedBy.length}
-                  isLiked={blog.likedBy.includes(user._id)}
-                />
-              </Link>
-              <div className="absolute top-2 right-2 flex space-x-2">
+            <div key={blog._id} className="relative mt-16">
+              <BlogCard
+                picture={blog.picture}
+                title={blog.title}
+                description={blog.description}
+                createdBy={blog.createdBy.firstname || "Unknown"}
+                createdAt={blog.createdAt}
+                likes={blog.likedBy.length}
+                isLiked={blog.likedBy.includes(user._id)}
+                blogId={blog._id}
+              />
+              <div className="edit-delete absolute  right-2 flex space-x-2">
                 <button
                   className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
                   onClick={() => handleUpdate(blog._id)}

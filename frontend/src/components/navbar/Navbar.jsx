@@ -16,26 +16,12 @@ const Navbar = () => {
     }
   };
 
-  const toggleTheme = () => {};
-
   return (
     <nav className="bg-blue-600 p-4 flex justify-between items-center fixed w-full top-0 left-0 z-10">
       <div className="text-white text-xl font-bold">
         <Link to="/blogs">MyBlogsApp</Link>
       </div>
       <div className="flex items-center space-x-4">
-        <button
-          className="bg-white text-blue-600 px-4 py-2 rounded"
-          onClick={toggleTheme}
-        >
-          Toggle Theme
-        </button>
-        <button
-          className="bg-white text-blue-600 px-4 py-2 rounded"
-          onClick={handleCreatePostClick}
-        >
-          Create Post
-        </button>
         {!isAuthenticated ? (
           <>
             {(location.pathname === "/signup" ||
@@ -59,17 +45,23 @@ const Navbar = () => {
           </>
         ) : (
           <>
+            <button
+              className="bg-white text-blue-600 px-4 py-2 rounded"
+              onClick={handleCreatePostClick}
+            >
+              WriteBlog
+            </button>
             <Link
               to="/my-posts"
               className="bg-white text-blue-600 px-4 py-2 rounded"
             >
-              My Created Posts
+              MyBlogs
             </Link>
             <Link
               to="/liked-posts"
               className="bg-white text-blue-600 px-4 py-2 rounded"
             >
-              My Liked Posts
+              MyLikedBlogs
             </Link>
             <button
               className="bg-red-600 text-white px-4 py-2 rounded"

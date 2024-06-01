@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useToastContext } from "../../context/ToastContext";
 
 const LikeButton = (props) => {
-  const { blogId, isLiked, setLiked, likeCount, setLikeCount } = props;
+  const { blogId, isLiked, setLiked, likeCount, setLikeCount, onUnlike } = props;
   const { user } = useAuth();
   const { showError } = useToastContext();
   const toggleLike = async () => {
@@ -17,8 +17,12 @@ const LikeButton = (props) => {
       }
       const response = await axiosInstance.patch(`/blogs/${blogId}/like`);
       if (response.status === 200) {
-        setLiked(!isLiked);
-        setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+        const newIsLiked = !isLiked;
+        setLiked(newIsLiked);
+        setLikeCount(!newIsLiked ? likeCount - 1 : likeCount + 1);
+        if (!newIsLiked && onUnlike) {
+          onUnlike(blogId); // Call onUnlike when the blog is unliked
+        }
       }
     } catch (error) {
       console.error("Error toggling like", error);
@@ -45,6 +49,7 @@ LikeButton.propTypes = {
   setLiked: PropTypes.func,
   likeCount: PropTypes.number,
   setLikeCount: PropTypes.func,
+  onUnlike: PropTypes.func
 };
 
 export default LikeButton;

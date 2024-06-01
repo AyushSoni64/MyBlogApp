@@ -4,10 +4,12 @@ import BlogModel from "./BlogModel";
 import { User } from "../user/UserModel";
 
 class BlogRepository {
-  async getBlogs() {
+  async getBlogs(page: number, limit: number) {
     try {
       const blogs = await BlogModel.find()
         .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
         .populate("createdBy")
         .lean();
       return blogs;
@@ -25,11 +27,20 @@ class BlogRepository {
     }
   }
 
-  async editBlog(blogId: string, title: string, description: string) {
+  async editBlog(blogId: string, title: string, description: string, pictureUrl: string) {
     try {
+      // const blog = await BlogModel.findByIdAndUpdate(
+      //   blogId,
+      //   { title, description },
+      //   { new: true }
+      // ).lean();
+      const updateData = { title, description };
+      if (pictureUrl) {
+        updateData['picture'] = pictureUrl;
+      }
       const blog = await BlogModel.findByIdAndUpdate(
         blogId,
-        { title, description },
+        { $set: updateData },
         { new: true }
       ).lean();
       if (!blog) {

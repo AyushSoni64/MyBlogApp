@@ -21,6 +21,7 @@ blogRouter.post(
 blogRouter.put(
   "/blogs/:blogId",
   authMiddleware,
+  upload.single("picture"),
   validationHandler(blogValidation.editBlog),
   blogController.editBlog
 );

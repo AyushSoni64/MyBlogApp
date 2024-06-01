@@ -121,7 +121,7 @@ class UserController {
   login = async (request: Request, response: Response, next: NextFunction) => {
     try {
       const { email, password } = request.body;
-      // console.log("valid token request for user", request.body);
+      console.log("valid token request for user", request.body);
       const userExists = await userRepository.findOneUser({ email });
 
       if (userExists) {
@@ -131,7 +131,8 @@ class UserController {
             userExists.toObject();
           const token = jwt.sign(
             { data: userWithoutSensitiveInfo },
-            configurations.jwt_secret
+            configurations.jwt_secret,
+            { expiresIn: "1h" }
           );
           return response
             .status(200)
@@ -163,7 +164,9 @@ class UserController {
       const token = request.header("Authorization");
       const { jwt_secret } = configurations;
       const decodedToken: any = jwt.verify(token, jwt_secret);
-      const user = await userRepository.getUserLikedBlogs(decodedToken.data._id);
+      const user = await userRepository.getUserLikedBlogs(
+        decodedToken.data._id
+      );
       if (!user) {
         throw new ApiError(404, "User not found");
       }
