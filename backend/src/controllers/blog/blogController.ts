@@ -44,9 +44,6 @@ class BlogController {
     try {
       const { blogId } = request.params;
       const { title, description } = request.body;
-      // const picturePath = request.file?.path;
-      // const picture = await uploadOnCloudinary(picturePath);
-      // if (!picture) next(new ApiError(400, "Error in image upload"));
       let picture;
       if (request.file) {
         const picturePath = request.file.path;
@@ -55,7 +52,12 @@ class BlogController {
           return next(new ApiError(400, "Error in image upload"));
         }
       }
-      const blog = await BlogRepository.editBlog(blogId, title, description, picture.url);
+      const blog = await BlogRepository.editBlog(
+        blogId,
+        title,
+        description,
+        picture.url
+      );
       response.json(new ApiResponse(200, blog, "Blog updated successfully"));
     } catch (error) {
       console.log("CATCH BLOCK : blogs controller editBlog =>", error);

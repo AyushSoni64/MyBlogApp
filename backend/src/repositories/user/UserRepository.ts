@@ -47,7 +47,7 @@ class UserRepository {
     }
   }
 
-  getUserLikedBlogs = async (userId) => {
+  public getUserLikedBlogs = async (userId) => {
     try {
       const user = await this.userModel.findById(userId).populate({
         path: "likedBlogs",

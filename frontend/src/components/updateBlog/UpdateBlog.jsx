@@ -27,7 +27,7 @@ const UpdateBlog = () => {
         const blog = response.data?.data;
         setTitle(blog.title);
         setDescription(blog.description);
-        setImagePreview(blog.picture); // Assuming the API returns the picture URL
+        setImagePreview(blog.picture);
       } catch (error) {
         console.error("Error fetching blog", error);
       }

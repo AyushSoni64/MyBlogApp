@@ -3,9 +3,6 @@ const errorHandler = (err, req, res, next) => {
     return next(err);
   }
   const { message, statusCode, error } = err;
-  // console.log("EErrrrrrrooooorrrrr\n", err);
-
-  console.log({ message, statusCode, error });
 
   const result = {
     error: error || "undefined",

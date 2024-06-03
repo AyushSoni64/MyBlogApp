@@ -21,7 +21,7 @@ const LikeButton = (props) => {
         setLiked(newIsLiked);
         setLikeCount(!newIsLiked ? likeCount - 1 : likeCount + 1);
         if (!newIsLiked && onUnlike) {
-          onUnlike(blogId); // Call onUnlike when the blog is unliked
+          onUnlike(blogId); 
         }
       }
     } catch (error) {

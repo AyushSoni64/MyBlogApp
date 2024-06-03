@@ -1,12 +1,18 @@
-import { Types } from "mongoose";
+import { Model, Types } from "mongoose";
 import { IBlog } from "./IBlog";
 import BlogModel from "./BlogModel";
 import { User } from "../user/UserModel";
 
 class BlogRepository {
-  async getBlogs(page: number, limit: number) {
+  private blogModel: Model<IBlog>;
+
+  constructor(blogModel: Model<IBlog>) {
+    this.blogModel = blogModel;
+  }
+
+  public async getBlogs(page: number, limit: number) {
     try {
-      const blogs = await BlogModel.find()
+      const blogs = await this.blogModel.find()
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
@@ -18,27 +24,22 @@ class BlogRepository {
     }
   }
 
-  async addBlog(blogData: IBlog) {
+  public async addBlog(blogData: IBlog) {
     try {
-      const blog = await BlogModel.create(blogData);
+      const blog = await this.blogModel.create(blogData);
       return blog.id;
     } catch (error) {
       throw new Error(`Error adding blog: ${error.message}`);
     }
   }
 
-  async editBlog(blogId: string, title: string, description: string, pictureUrl: string) {
+  public async editBlog(blogId: string, title: string, description: string, pictureUrl: string) {
     try {
-      // const blog = await BlogModel.findByIdAndUpdate(
-      //   blogId,
-      //   { title, description },
-      //   { new: true }
-      // ).lean();
       const updateData = { title, description };
       if (pictureUrl) {
         updateData['picture'] = pictureUrl;
       }
-      const blog = await BlogModel.findByIdAndUpdate(
+      const blog = await this.blogModel.findByIdAndUpdate(
         blogId,
         { $set: updateData },
         { new: true }
@@ -52,9 +53,9 @@ class BlogRepository {
     }
   }
 
-  async findBlogById(blogId: string) {
+  public async findBlogById(blogId: string) {
     try {
-      const blog = await BlogModel.findById(blogId)
+      const blog = await this.blogModel.findById(blogId)
         .populate("createdBy")
         .lean();
       if (!blog) {
@@ -66,9 +67,9 @@ class BlogRepository {
     }
   }
 
-  async getBlogsByUserId(userId: string) {
+  public async getBlogsByUserId(userId: string) {
     try {
-      const blogs = await BlogModel.find({ createdBy: userId })
+      const blogs = await this.blogModel.find({ createdBy: userId })
         .populate("createdBy")
         .lean();
       return blogs;
@@ -77,9 +78,9 @@ class BlogRepository {
     }
   }
 
-  async deleteBlogById(blogId: string) {
+  public async deleteBlogById(blogId: string) {
     try {
-      const blog = await BlogModel.findByIdAndDelete(blogId).lean();
+      const blog = await this.blogModel.findByIdAndDelete(blogId).lean();
       if (!blog) {
         throw new Error("Blog not found");
       }
@@ -89,9 +90,9 @@ class BlogRepository {
     }
   }
 
-  async toggleLike(blogId: string, userId: string) {
+  public async toggleLike(blogId: string, userId: string) {
     try {
-      const blogById = await BlogModel.findById(blogId);
+      const blogById = await this.blogModel.findById(blogId);
 
       if (!blogById) {
         throw new Error("Blog not found");
@@ -102,7 +103,7 @@ class BlogRepository {
 
       let blog;
       if (hasLiked) {
-        blog = await BlogModel.findByIdAndUpdate(
+        blog = await this.blogModel.findByIdAndUpdate(
           blogId,
           { $pull: { likedBy: userObjectId } },
           { new: true }
@@ -112,7 +113,7 @@ class BlogRepository {
           $pull: { likedBlogs: blogId },
         });
       } else {
-        blog = await BlogModel.findByIdAndUpdate(
+        blog = await this.blogModel.findByIdAndUpdate(
           blogId,
           { $addToSet: { likedBy: userObjectId } },
           { new: true }
@@ -130,4 +131,4 @@ class BlogRepository {
   }
 }
 
-export default new BlogRepository();
+export default new BlogRepository(BlogModel);
