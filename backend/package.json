@@ -7,7 +7,7 @@
     "nodemon": "nodemon ./dist/index.js",
     "start": "tsc-watch --onSuccess \"npm run nodemon\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
