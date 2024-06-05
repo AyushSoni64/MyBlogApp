@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -57,13 +57,15 @@ export const AuthProvider = ({ children }) => {
 
 let globalLogout = () => {};
 
-export const setGlobalLogout = (logoutFunction) => {
+const setGlobalLogout = (logoutFunction) => {
   globalLogout = logoutFunction;
 };
 
-export const getGlobalLogout = () => {
+const getGlobalLogout = () => {
   return globalLogout;
 };
+
+export { setGlobalLogout, getGlobalLogout, AuthProvider, useAuth };
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,

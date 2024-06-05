@@ -13,21 +13,18 @@ const BlogDetails = () => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
-
-
+  const fetchBlog = async () => {
+    try {
+      const response = await axiosInstance.get(`/blogs/${blogId}`);
+      setBlog(response.data.data);
+      setLiked(user ? response.data.data.likedBy.includes(user._id) : false);
+      setLikeCount(response.data.data.likedBy.length);
+    } catch (error) {
+      setError("Error fetching blog details");
+      console.error("Error fetching blog details", error);
+    }
+  };
   useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const response = await axiosInstance.get(`/blogs/${blogId}`);
-        setBlog(response.data.data);
-        setLiked(user ? response.data.data.likedBy.includes(user._id) : false);
-        setLikeCount(response.data.data.likedBy.length);
-      } catch (error) {
-        setError("Error fetching blog details");
-        console.error("Error fetching blog details", error);
-      }
-    };
-
     fetchBlog();
   }, [user, blogId]);
 

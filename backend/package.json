@@ -6,7 +6,8 @@
   "scripts": {
     "nodemon": "nodemon ./dist/index.js",
     "start": "tsc-watch --onSuccess \"npm run nodemon\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env \"tsc\""
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "cloudinary": "^2.2.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.1.0",

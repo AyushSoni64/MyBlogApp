@@ -36,10 +36,6 @@ const UpdateBlog = () => {
     fetchBlog();
   }, [blogId]);
 
-  useEffect(() => {
-    validateForm();
-  }, [title, description, picture]);
-
   const validateForm = () => {
     const titleWords = title.trim().split(/\s+/).length;
     const descriptionWords = description.trim().split(/\s+/).length;
@@ -50,6 +46,11 @@ const UpdateBlog = () => {
 
     setIsFormValid(isTitleValid && isDescriptionValid && isPictureValid);
   };
+  
+  useEffect(() => {
+    validateForm();
+  }, [title, description, picture]);
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
