@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axoisInstance";
 import LikeButton from "../genericComponent/LikeButton";
 import { useAuth } from "../../context/AuthContext";
+// import useSocket from "../../hooks/useSocket";
 
 const BlogDetails = () => {
   const { blogId } = useParams();
@@ -11,6 +12,8 @@ const BlogDetails = () => {
   const [error, setError] = useState("");
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+
+
 
   useEffect(() => {
     const fetchBlog = async () => {

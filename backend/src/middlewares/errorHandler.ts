@@ -1,5 +1,12 @@
-const errorHandler = (err, req, res, next) => {
-  if (res.headersSent) {
+import { NextFunction, Request, Response } from "express";
+
+const errorHandler = (
+  err,
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  if (response.headersSent) {
     return next(err);
   }
   const { message, statusCode, error } = err;
@@ -10,6 +17,6 @@ const errorHandler = (err, req, res, next) => {
     status: statusCode || 500,
     timestamp: new Date(),
   };
-  res.status(result.status).json(result);
+  response.status(result.status).json(result);
 };
 export default errorHandler;

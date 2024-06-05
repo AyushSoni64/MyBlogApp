@@ -2,6 +2,7 @@ import { Model, Types } from "mongoose";
 import { IBlog } from "./IBlog";
 import BlogModel from "./BlogModel";
 import { User } from "../user/UserModel";
+import { io } from "../../index";
 
 class BlogRepository {
   private blogModel: Model<IBlog>;
@@ -12,7 +13,8 @@ class BlogRepository {
 
   public async getBlogs(page: number, limit: number) {
     try {
-      const blogs = await this.blogModel.find()
+      const blogs = await this.blogModel
+        .find()
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
@@ -26,27 +28,36 @@ class BlogRepository {
 
   public async addBlog(blogData: IBlog) {
     try {
-      const blog = await this.blogModel.create(blogData);
-      return blog.id;
+      const newBlog = await this.blogModel.create(blogData);
+      const blog = await this.blogModel
+        .findById(newBlog.id)
+        .populate("createdBy")
+        .lean();
+      io.emit("blog_created", blog);
+      return newBlog.id;
     } catch (error) {
       throw new Error(`Error adding blog: ${error.message}`);
     }
   }
 
-  public async editBlog(blogId: string, title: string, description: string, pictureUrl: string) {
+  public async editBlog(
+    blogId: string,
+    title: string,
+    description: string,
+    pictureUrl: string
+  ) {
     try {
       const updateData = { title, description };
       if (pictureUrl) {
-        updateData['picture'] = pictureUrl;
+        updateData["picture"] = pictureUrl;
       }
-      const blog = await this.blogModel.findByIdAndUpdate(
-        blogId,
-        { $set: updateData },
-        { new: true }
-      ).lean();
+      const blog = await this.blogModel
+        .findByIdAndUpdate(blogId, { $set: updateData }, { new: true })
+        .lean();
       if (!blog) {
         throw new Error("Blog not found");
       }
+      io.emit("blog_updated", blog);
       return blog;
     } catch (error) {
       throw new Error(`Error editing blog: ${error.message}`);
@@ -55,7 +66,8 @@ class BlogRepository {
 
   public async findBlogById(blogId: string) {
     try {
-      const blog = await this.blogModel.findById(blogId)
+      const blog = await this.blogModel
+        .findById(blogId)
         .populate("createdBy")
         .lean();
       if (!blog) {
@@ -69,7 +81,8 @@ class BlogRepository {
 
   public async getBlogsByUserId(userId: string) {
     try {
-      const blogs = await this.blogModel.find({ createdBy: userId })
+      const blogs = await this.blogModel
+        .find({ createdBy: userId })
         .populate("createdBy")
         .lean();
       return blogs;
@@ -100,31 +113,35 @@ class BlogRepository {
 
       const userObjectId = new Types.ObjectId(userId);
       const hasLiked = blogById.likedBy.some((id) => id.equals(userObjectId));
-
       let blog;
       if (hasLiked) {
-        blog = await this.blogModel.findByIdAndUpdate(
-          blogId,
-          { $pull: { likedBy: userObjectId } },
-          { new: true }
-        ).lean();
+        blog = await this.blogModel
+          .findByIdAndUpdate(
+            blogId,
+            { $pull: { likedBy: userObjectId } },
+            { new: true }
+          )
+          .lean();
 
         await User.findByIdAndUpdate(userId, {
           $pull: { likedBlogs: blogId },
         });
       } else {
-        blog = await this.blogModel.findByIdAndUpdate(
-          blogId,
-          { $addToSet: { likedBy: userObjectId } },
-          { new: true }
-        ).lean();
+        blog = await this.blogModel
+          .findByIdAndUpdate(
+            blogId,
+            { $addToSet: { likedBy: userObjectId } },
+            { new: true }
+          )
+          .lean();
 
         await User.findByIdAndUpdate(userId, {
           $addToSet: { likedBlogs: blogId },
         });
       }
 
-      return blog;
+      io.emit("toggle-like", blog);
+      return {blog, hasLiked};
     } catch (error) {
       throw new Error(`Error toggling like: ${error.message}`);
     }

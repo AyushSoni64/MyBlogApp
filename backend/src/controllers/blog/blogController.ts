@@ -31,6 +31,7 @@ class BlogController {
         createdBy,
         ...blogData,
       });
+
       response.json(
         new ApiResponse(201, { blogId }, "Blog added successfully")
       );
@@ -112,8 +113,17 @@ class BlogController {
     try {
       const { blogId } = request.params;
       const userId = request?.user?.data?._id;
-      const blog = await BlogRepository.toggleLike(blogId, userId);
-      response.json(new ApiResponse(200, blog, "Liked successfully"));
+      const { blog, hasLiked } = await BlogRepository.toggleLike(
+        blogId,
+        userId
+      );
+      response.json(
+        new ApiResponse(
+          200,
+          blog,
+          !hasLiked ? "Liked successfully" : "Unliked Successfully"
+        )
+      );
     } catch (error) {
       console.log("CATCH BLOCK : blogs controller toggleLike =>", error);
       next(new ApiError(400, error.message));

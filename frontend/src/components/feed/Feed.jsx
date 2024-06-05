@@ -4,16 +4,22 @@ import axiosInstance from "../../utils/axoisInstance";
 import { useAuth } from "../../context/AuthContext";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { CircularProgress } from "@mui/material";
+import useSocket from "../../hooks/useSocket";
 
 const Feed = () => {
   const [blogs, setBlogs] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+
+  useSocket("blog_created", (newBlog) => {
+    console.log("Updated Blog:> ", newBlog);
+    setBlogs((prevBlogs) => [newBlog, ...prevBlogs]);
+  });
 
   const fetchBlogs = async (pageNum = 1) => {
     try {
-      const limit = 5; 
+      const limit = 5;
       const response = await axiosInstance.get("/blogs", {
         params: { page: pageNum, limit },
       });
@@ -21,7 +27,7 @@ const Feed = () => {
         const newBlogs = response.data?.data;
         setBlogs((prevBlogs) => [...prevBlogs, ...newBlogs]);
         if (newBlogs.length < limit) {
-          setHasMore(false); 
+          setHasMore(false);
         }
         setPage(pageNum + 1);
       }
@@ -31,8 +37,11 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    fetchBlogs(); 
-  }, []);
+    setBlogs([]);
+    setPage(1);
+    setHasMore(true);
+    fetchBlogs();
+  }, [isAuthenticated]);
 
   if (!blogs || blogs.length === 0) {
     return <div>NO BLOGS FOUND</div>;
@@ -41,13 +50,13 @@ const Feed = () => {
   return (
     <div className="bg-gray-200 min-h-screen p-4">
       <div className="max-w-6xl mx-auto">
-      <InfiniteScroll
-        dataLength={blogs.length}
-        next={() => fetchBlogs(page)}
-        hasMore={hasMore}
-        loader={<CircularProgress />}
-        className="overflow-hidden p-10"
-      >
+        <InfiniteScroll
+          dataLength={blogs.length}
+          next={() => fetchBlogs(page)}
+          hasMore={hasMore}
+          loader={<CircularProgress />}
+          className="overflow-hidden p-10"
+        >
           {blogs?.map((blog) => (
             <div key={blog._id} className="mt-9">
               <BlogCard
@@ -62,8 +71,8 @@ const Feed = () => {
               />
             </div>
           ))}
-      </InfiniteScroll>
-        </div>
+        </InfiniteScroll>
+      </div>
     </div>
   );
 };

@@ -4,9 +4,7 @@ import PropTypes from "prop-types";
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
@@ -24,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       setToken(savedToken);
       setUser(savedUser);
     }
-  }, [isAuthenticated]);
+  }, []);
 
   const login = (token, user) => {
     setToken(token);

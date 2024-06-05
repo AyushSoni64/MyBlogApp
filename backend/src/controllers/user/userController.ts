@@ -121,7 +121,6 @@ class UserController {
   login = async (request: Request, response: Response, next: NextFunction) => {
     try {
       const { email, password } = request.body;
-      console.log("valid token request for user", request.body);
       const userExists = await userRepository.findOneUser({ email });
 
       if (userExists) {

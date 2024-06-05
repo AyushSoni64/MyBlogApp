@@ -13,11 +13,14 @@ const Login = () => {
   const { showSuccess, showError } = useToastContext();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [emailBlurred, setEmailBlurred] = useState(false);
+  const [passwordBlurred, setPasswordBlurred] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
   useEffect(() => {
-    if (emailRegex.test(email) && password) {
+    if (emailRegex.test(email) && passwordRegex.test(password)) {
       setIsButtonDisabled(false);
       setError("");
     } else {
@@ -25,9 +28,8 @@ const Login = () => {
     }
   }, [email, password]);
 
-  const handleEmailBlur = () => {
-    setEmailBlurred(true);
-  };
+  const handleEmailBlur = () => setEmailBlurred(true);
+  const handlePasswordBlur = () => setPasswordBlurred(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +50,7 @@ const Login = () => {
       }
     } catch (err) {
       console.log("Error from login\n", err);
-      setError("Login failed");
+      setError(err.response.data.message);
     }
   };
 
@@ -79,7 +81,16 @@ const Login = () => {
               className="w-full px-3 py-2 border rounded"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={handlePasswordBlur}
             />
+            {passwordBlurred &&
+              !passwordRegex.test(password) &&
+              password !== "" && (
+                <p className="text-red-500 text-sm">
+                  Password must be at least 8 characters long, contain at least
+                  one letter, one number, and one special character
+                </p>
+              )}
           </div>
           <button
             type="submit"
