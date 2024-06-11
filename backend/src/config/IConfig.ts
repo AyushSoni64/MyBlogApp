@@ -8,4 +8,4 @@ interface IConfig {
   cloudinary_api: string;
 }
 
-export {IConfig};
+export { IConfig };
